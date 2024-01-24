@@ -1,0 +1,123 @@
+#include<string.h>
+#include <stdio.h>
+/*function definition
+To getting the power of the value*/
+int power(int a, int y)
+{
+    int mul=1;
+    for (int i=0;i<y;i++)
+    {
+        mul=mul*a;
+    }
+    return mul;
+}
+int *get_rem(int n,int k,int divisor[],int dividend[])
+{
+    static int reminder[3];
+    int num=0;
+    while(num!=k)
+    {
+        int temp[7]={0,0,0,0,0,0,0};
+        if(dividend[num]==1)
+        {
+            for(int i=0;i<k;i++)
+            {
+                temp[i+num]=divisor[i];
+            }
+            for(int i=0;i<n;i++)
+            {
+                temp[i]=dividend[i]^temp[i];
+            }
+            for(int i=0;i<n;i++)
+            {
+                dividend[i]=temp[i];
+            }
+        }
+        else
+        {
+            for(int i=0;i<n;i++)
+            {
+                temp[i]=dividend[i]^temp[i];
+            }
+            for(int i=0;i<n;i++)
+            {
+                dividend[i]=temp[i];
+            }
+        }
+        num=num+1;
+    }
+    int a =0;
+    for(int i=k;i<n;i++)
+    {
+        reminder[a]=dividend[i];
+        a=a+1;
+    }
+    return reminder;
+}
+int main()
+{
+    int k=4,n=7,i;
+    int divisor_size=(n-k)+1;
+    int dividend_size=k+(n-k);
+    int divisor[divisor_size];
+    int dividend[dividend_size];
+    //getting the value of the divisor and dividend in the char or stirng format
+    char get_divisor[k];
+    char get_dividend[n];
+    //using gets function taking input to the user in the string format
+    printf("Enter the value of divisor : ");
+    gets(get_divisor);
+    printf("Enter the value of dividend : ");
+    gets(get_dividend);
+    //to get the length of the divisor and dividend char value
+    int divisor_len=strlen(get_divisor);
+    int dividend_len=strlen(get_dividend);
+    //to store the value in the specific divisor array in integer format
+    for(i=0;i<divisor_len;i++)
+    {
+        int a = get_divisor[i];
+        if(a==49)
+        divisor[i]=1;
+        else
+        divisor[i]=0;
+    }
+    //initialization of the dividend array as '0';
+    for(int i=0;i<dividend_size;i++)
+    {
+        dividend[i]=0;
+    }
+    //to store the value in the dividend array in integer format
+    for(i=0;i<dividend_len;i++)
+    {
+        int a = get_dividend[i];
+        if(a==49)
+        dividend[i]=1;
+        else
+        dividend[i]=0;
+    }
+    //to create a dummy dividend to pass the dividend values and to give an argument to the functioncall
+    int dummy_dividend[dividend_size];
+    for(i=0;i<n;i++)
+    {
+        dummy_dividend[i]=dividend[i];
+    }
+    //function call
+    int a=0;
+    int *reminder=get_rem(n,k,divisor,dummy_dividend);
+    printf("The Reminder is : ");
+    for(i=0;i<3;i++)
+    {
+        printf("%d",reminder[i]);
+    }
+    printf("\nCodeword : ");
+    for(i=k;i<n;i++)
+    {
+        dividend[i]=reminder[a];
+        a=a+1;
+    }
+    for(i=0;i<n;i++)
+    {
+        printf("%d",dividend[i]);
+    }
+    printf("\nThe reminder bits is appended with the original data.\n");
+}
