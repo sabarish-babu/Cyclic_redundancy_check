@@ -11,6 +11,18 @@ int power(int a, int y)
     }
     return mul;
 }
+int get_decimal(int size,int array[])
+{
+    int sum=0;
+    for(int i=0;i<size;i++)
+    {
+        if(array[i]==1)
+        {
+        sum=sum+power(2,(size-1)-i);
+        }
+    }
+    return sum;
+}
 int *get_rem(int n,int k,int divisor[],int dividend[])
 {
     static int reminder[3];
@@ -53,18 +65,16 @@ int main()
     int dividend_size=k+(n-k);
     int divisor[divisor_size];
     int dividend[dividend_size];
-    //getting the value of the divisor and dividend in the char or stirng format
     char get_divisor[k];
     char get_dividend[n];
-    //using gets function taking input to the user in the string format
     printf("Enter the value of divisor : ");
     gets(get_divisor);
     printf("Enter the value of dividend : ");
     gets(get_dividend);
-    //to get the length of the divisor and dividend char value
+    
     int divisor_len=strlen(get_divisor);
     int dividend_len=strlen(get_dividend);
-    //to store the value in the specific divisor array in integer format
+    
     for(i=0;i<divisor_len;i++)
     {
         int a = get_divisor[i];
@@ -73,12 +83,10 @@ int main()
         else
         divisor[i]=0;
     }
-    //initialization of the dividend array as '0';
     for(int i=0;i<dividend_size;i++)
     {
         dividend[i]=0;
     }
-    //to store the value in the dividend array in integer format
     for(i=0;i<dividend_len;i++)
     {
         int a = get_dividend[i];
@@ -87,14 +95,16 @@ int main()
         else
         dividend[i]=0;
     }
-    //to create a dummy dividend to pass the dividend values and to give an argument to the functioncall
+    int divisor_sum=get_decimal(k,divisor);
+    int dividend_sum=get_decimal(n,dividend);
     int dummy_dividend[dividend_size];
     for(i=0;i<n;i++)
     {
         dummy_dividend[i]=dividend[i];
     }
-    //function call
     int a=0;
+    if(divisor_sum<dividend_sum)
+    {
     int *reminder=get_rem(n,k,divisor,dummy_dividend);
     printf("The Reminder is : ");
     for(i=0;i<3;i++)
@@ -111,5 +121,17 @@ int main()
     {
         printf("%d",dividend[i]);
     }
+    int *syn=get_rem(n,k,divisor,dividend);
+    printf("\nThe syndrome is : ");
+    for(int i=0;i<3;i++)
+    {
+        printf("%d",syn[i]);
+    }
     printf("\nThe reminder bits is appended with the original data.\n");
-}
+    }
+    else
+    {
+        printf("the divisor is greater than dividend");
+    }
+        
+    }
