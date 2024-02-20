@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string.h>
+#define MAX_LEN 1000
 int power(int a, int y)
 {
     int mul=1;
@@ -23,8 +24,6 @@ int get_decimal(int size,int array[])
 }
 int getrem(int divisor_size,int dividend_size,int divisor[],int dividend[])
 {
-    static int reminder[3];
-    int len=dividend_size-(divisor_size-1);
     int k=(dividend_size-divisor_size)+1;
     int num=0;
     while(num!=k)
@@ -58,24 +57,19 @@ int getrem(int divisor_size,int dividend_size,int divisor[],int dividend[])
 }
 int main()
 {
-    int len,d,i;
-    printf("enter the divisor len  : ");
-    scanf("%d",&d);
-    printf("Enter the dividend len : ");
-    scanf("%d",&len);
-    int divisor_size=d;
-    int dividend_size=len+(divisor_size-1);
-    int divisor[divisor_size];
-    int dividend[dividend_size];
-    char get_divisor[divisor_size];
-    char get_dividend[len];
+    char get_divisor[MAX_LEN];
+    char get_dividend[MAX_LEN];
     printf("Enter the value of divisor : ");
     scanf("%s",get_divisor);
     printf("Enter the value of dividend : ");
     scanf("%s",get_dividend);
-    int divisor_strlen=strlen(get_divisor);
-    int dividend_strlen=strlen(get_dividend);
-    for(i=0;i<divisor_strlen;i++)
+    int divisor_size=strlen(get_divisor);
+    int actual_size=strlen(get_dividend);
+    int dividend_size=actual_size+(divisor_size-1);
+    int divisor[divisor_size];
+    int dividend[dividend_size];
+    int codeword[dividend_size];
+    for(int i=0;i<divisor_size;i++)
     {
         int a = get_divisor[i];
         if(a==49)
@@ -87,7 +81,7 @@ int main()
     {
         dividend[i]=0;
     }
-    for(i=0;i<dividend_strlen;i++)
+    for(int i=0;i<dividend_size;i++)
     {
         int a = get_dividend[i];
         if(a==49)
@@ -95,42 +89,33 @@ int main()
         else
         dividend[i]=0;
     }
-    int divisor_sum=get_decimal(divisor_size,divisor);
-    int dividend_sum=get_decimal(dividend_size,dividend);
-    int dummy_dividend[dividend_size];
-    for(i=0;i<dividend_size;i++)
-    {
-        dummy_dividend[i]=dividend[i];
-    }
-    if (divisor_sum<dividend_sum)
-    {
-    getrem(divisor_size,dividend_size,divisor,dummy_dividend);
-    int codeword[dividend_size];
-    printf("\nThe reminder is :");
-    for(int i=len;i<dividend_size;i++)
-    {
-        printf("%d",dummy_dividend[i]);
-    }
-    for(int i=0;i<len;i++)
+    for(int i=0;i<actual_size;i++)
     {
         codeword[i]=dividend[i];
     }
-    for(int i=len;i<dividend_size;i++)
+    if(get_decimal(actual_size,dividend)>get_decimal(divisor_size,divisor))
     {
-        codeword[i]=dummy_dividend[i];
+    getrem(divisor_size,dividend_size,divisor,dividend);
+    printf("\nThe reminder is :");
+    for(int i=actual_size;i<dividend_size;i++)
+    {
+        printf("%d",dividend[i]);
+    }
+    for(int i=actual_size;i<dividend_size;i++)
+    {
+        codeword[i]=dividend[i];
     }
     printf("\nThe code word is :");
     for(int i=0;i<dividend_size;i++)
     {
         printf("%d",codeword[i]);
     }
-    printf("\nThe reminder bit is appended to the original data.....\n");
-    printf("\n");
+    printf("\nThe reminder bit is appended to the original data.....\n\n");
     char rx_str[dividend_size];
     printf("Enter the value of Receiver signal : ");
     scanf("%s",rx_str);
     int rx[dividend_size];
-    for(i=0;i<dividend_size;i++)
+    for(int i=0;i<dividend_size;i++)
     {
         int a = rx_str[i];
         if(a==49)
@@ -141,7 +126,7 @@ int main()
     int syn[divisor_size-1];
     getrem(divisor_size,dividend_size,divisor,rx);
     int a=0;
-    for(int i=len;i<dividend_size;i++)
+    for(int i=actual_size;i<dividend_size;i++)
     {
         syn[a]=rx[i];
         a=a+1;
